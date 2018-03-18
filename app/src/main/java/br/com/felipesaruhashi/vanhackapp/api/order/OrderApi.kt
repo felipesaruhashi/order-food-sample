@@ -29,28 +29,9 @@ class OrderApi : IOrderApi {
     }
 
     override fun submitOrder(order: Order): Observable<ResponseBody> {
-
-        val orderHash = HashMap<String, Any>()
-
-        val items = ArrayList<HashMap<String, Any>>()
-
-        order.orderItems?.forEach {
-            val item = HashMap<String, Any>()
-            item.put("productId", it.productId as Int)
-            item.put("quantity", it.quantity as Int)
-
-            items.add(item)
-        }
-
-        orderHash.put("deliveryAddress", order.deliveryAddress ?: "string")
-        orderHash.put("contact", order.contact ?: "string")
-        orderHash.put("storeId", order.storeId as Int)
-        orderHash.put("orderItems", items)
-        orderHash.put("status", "WAITING")
-
         return api.generateRetrofit().flatMap {
             it.create(OrderService::class.java)
-                    .submitOrder(orderHash)
+                    .submitOrder(order)
         }
     }
 
@@ -70,7 +51,7 @@ interface OrderService {
 
 
     @POST("api/v1/Order")
-    fun submitOrder(@Body order:HashMap<String, Any>): Observable<ResponseBody>
+    fun submitOrder(@Body order:Order): Observable<ResponseBody>
 
 
     @GET("api/v1/Order/customer")
