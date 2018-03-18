@@ -1,5 +1,6 @@
 package br.com.felipesaruhashi.vanhackapp.ui.login
 
+import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
@@ -10,6 +11,7 @@ import br.com.felipesaruhashi.vanhackapp.MainActivity
 import br.com.felipesaruhashi.vanhackapp.R
 import br.com.felipesaruhashi.vanhackapp.VanhackApp
 import br.com.felipesaruhashi.vanhackapp.api.auth.AuthApi
+import br.com.felipesaruhashi.vanhackapp.api.localstorage.LocalStorage
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
@@ -18,9 +20,9 @@ class LoginActivity : AppCompatActivity() {
 
 
     var loginApi = AuthApi()
+    var localStorage = LocalStorage()
 
     var mContext: Context? = null
-
     var loadingDialog:ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +32,13 @@ class LoginActivity : AppCompatActivity() {
         mContext = this
 
         VanhackApp.component.inject(this)
+
+        val currentToken = localStorage.getToken(this)
+
+        if ( currentToken.isNotEmpty() ) {
+            VanhackApp.token = currentToken
+            startActivity( Intent(mContext, MainActivity::class.java) )
+        }
 
         btnLogin.setOnClickListener{
 
@@ -41,6 +50,8 @@ class LoginActivity : AppCompatActivity() {
                         getString(R.string.loading_message), true)
                 loginApi.login(etLogin.text.toString(), etPassword.text.toString())
                 .subscribe({ token ->
+
+                    localStorage.saveToken(mContext as Activity, token)
 
                     loadingDialog?.dismiss()
 

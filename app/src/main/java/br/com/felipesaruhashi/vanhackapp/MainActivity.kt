@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -49,10 +50,8 @@ class MainActivity : BaseActivity() {
         adapter = CousineAdapter()
 
         rvCousine.itemAnimator = DefaultItemAnimator()
-        rvCousine.layoutManager = LinearLayoutManager(this)
+        rvCousine.layoutManager = LinearLayoutManager(this) as RecyclerView.LayoutManager?
         rvCousine.adapter = adapter
-
-
 
         loadingDialog = ProgressDialog.show(this, getString(R.string.loading),
                 getString(R.string.loading_message), true)
