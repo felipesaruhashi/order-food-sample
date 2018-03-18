@@ -1,4 +1,4 @@
-package br.com.felipesaruhashi.vanhackapp.login
+package br.com.felipesaruhashi.vanhackapp.ui.login
 
 import android.content.Context
 import android.content.Intent

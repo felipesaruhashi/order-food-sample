@@ -4,6 +4,7 @@ import br.com.felipesaruhashi.vanhackapp.VanhackApp
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -22,6 +23,9 @@ class VanhackApi : IApi {
 
             var builder = OkHttpClient.Builder()
 
+            val logging =  HttpLoggingInterceptor()
+
+            logging.level = HttpLoggingInterceptor.Level.BODY
 
             builder.addInterceptor { chain ->
 
@@ -30,14 +34,18 @@ class VanhackApi : IApi {
                 val requestBuilder = original.newBuilder()
 
                 if ( VanhackApp.token != null && (VanhackApp.token as String).isNotEmpty()) {
-                    requestBuilder.header("Authorization", VanhackApp.token )
+                    requestBuilder.header("Authorization",  "bearer ${VanhackApp.token}" )
                 }
 
                 val request: Request = requestBuilder.build()
                 chain.proceed(request)
             }
 
+            builder.addInterceptor(logging)
+
             var okHttpClient: OkHttpClient = builder.build()
+
+
 
             val gson = GsonBuilder()
                     .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")

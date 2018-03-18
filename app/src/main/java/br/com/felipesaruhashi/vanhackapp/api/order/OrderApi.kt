@@ -4,6 +4,7 @@ import br.com.felipesaruhashi.vanhackapp.VanhackApp
 import br.com.felipesaruhashi.vanhackapp.api.retrofit.IApi
 import br.com.felipesaruhashi.vanhackapp.api.retrofit.VanhackApi
 import br.com.felipesaruhashi.vanhackapp.models.Order
+import okhttp3.ResponseBody
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -27,14 +28,33 @@ class OrderApi : IOrderApi {
         }
     }
 
-    override fun submitOrder(order: Order): Observable<String> {
+    override fun submitOrder(order: Order): Observable<ResponseBody> {
+
+        val orderHash = HashMap<String, Any>()
+
+        val items = ArrayList<HashMap<String, Any>>()
+
+        order.orderItems?.forEach {
+            val item = HashMap<String, Any>()
+            item.put("productId", it.productId as Int)
+            item.put("quantity", it.quantity as Int)
+
+            items.add(item)
+        }
+
+        orderHash.put("deliveryAddress", order.deliveryAddress ?: "string")
+        orderHash.put("contact", order.contact ?: "string")
+        orderHash.put("storeId", order.storeId as Int)
+        orderHash.put("orderItems", items)
+        orderHash.put("status", "WAITING")
+
         return api.generateRetrofit().flatMap {
             it.create(OrderService::class.java)
-                    .submitOrder(order)
+                    .submitOrder(orderHash)
         }
     }
 
-    override fun getCustomerOrder(): Observable<String> {
+    override fun getCustomerOrder(): Observable<ResponseBody> {
         return api.generateRetrofit().flatMap {
             it.create(OrderService::class.java)
                     .getCustomerOrder()
@@ -50,10 +70,10 @@ interface OrderService {
 
 
     @POST("api/v1/Order")
-    fun submitOrder(@Body order:Order): Observable<String>
+    fun submitOrder(@Body order:HashMap<String, Any>): Observable<ResponseBody>
 
 
     @GET("api/v1/Order/customer")
-    fun getCustomerOrder() : Observable<String>
+    fun getCustomerOrder() : Observable<ResponseBody>
 
 }

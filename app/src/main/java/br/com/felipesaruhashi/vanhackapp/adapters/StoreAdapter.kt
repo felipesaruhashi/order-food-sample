@@ -1,7 +1,6 @@
 package br.com.felipesaruhashi.vanhackapp.adapters
 
 import android.content.Intent
-import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,13 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import br.com.felipesaruhashi.vanhackapp.R
-import br.com.felipesaruhashi.vanhackapp.models.Cousine
+import br.com.felipesaruhashi.vanhackapp.VanhackApp
+import br.com.felipesaruhashi.vanhackapp.models.Order
+import br.com.felipesaruhashi.vanhackapp.models.Store
+import br.com.felipesaruhashi.vanhackapp.ui.products.ProductsActivity
 import br.com.felipesaruhashi.vanhackapp.ui.store.StoresActivity
 
+class StoreAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
-class CousineAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
-
-    var cousines:List<Cousine>? = null
+    var stores:List<Store>? = null
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
 
@@ -24,31 +25,28 @@ class CousineAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
             val context = holder.itemView.context
 
 
-            val cousine = cousines?.get(position)
+            val store = stores?.get(position)
 
+            if ( store != null ) {
+                holder.tvItemName?.text = store.name
 
-            if ( cousine != null ) {
-                holder.tvItemName?.text = cousine.name
+                holder.itemView.setOnClickListener {
 
-                holder?.itemView.setOnClickListener {
+                    // reset the order
+                    VanhackApp.order = Order()
+                    VanhackApp.order?.storeId = store.id
 
-                    val cousineId = cousine.id
-
-                    Log.i("info", "cousine id : ${cousineId}")
-                    val i = Intent(context, StoresActivity::class.java)
-                    i.putExtra(StoresActivity.STORE_PARAM, cousineId)
+                    val i = Intent(context, ProductsActivity::class.java)
+                    i.putExtra(ProductsActivity.STORE_ID, store.id)
                     context.startActivity(i)
                 }
-            }
-
-            cousines?.get(position).let {
 
             }
         }
     }
 
     override fun getItemCount(): Int {
-        return cousines?.size ?: 0
+        return stores?.size ?: 0
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
@@ -59,9 +57,9 @@ class CousineAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
         return ViewHolder(view)
     }
 
-    class ViewHolder(view:View): RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
 
-        var tvItemName:TextView? = view.findViewById(R.id.tvItemName) as TextView
+        var tvItemName: TextView? = view.findViewById(R.id.tvItemName) as TextView
 
     }
 

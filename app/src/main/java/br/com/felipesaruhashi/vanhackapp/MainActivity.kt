@@ -1,27 +1,32 @@
 package br.com.felipesaruhashi.vanhackapp
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import br.com.felipesaruhashi.vanhackapp.adapters.CousineAdapter
 import br.com.felipesaruhashi.vanhackapp.api.cousine.CousineApi
+import br.com.felipesaruhashi.vanhackapp.ui.BaseActivity
+import br.com.felipesaruhashi.vanhackapp.ui.checkout.CheckoutActivity
 import kotlinx.android.synthetic.main.content_main.*
 import rx.android.schedulers.AndroidSchedulers
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
 
 //    lateinit var cousineApi:CousineApi
 
     var cousineApi = CousineApi()
 
-    var adapter :CousineAdapter? = null
+    var adapter : CousineAdapter? = null
 
     var mContext: Context? = null
 
@@ -65,5 +70,6 @@ class MainActivity : AppCompatActivity() {
         })
 
     }
+
 
 }

@@ -4,6 +4,7 @@ import android.content.res.TypedArray
 import br.com.felipesaruhashi.vanhackapp.VanhackApp
 import br.com.felipesaruhashi.vanhackapp.api.retrofit.IApi
 import br.com.felipesaruhashi.vanhackapp.api.retrofit.VanhackApi
+import br.com.felipesaruhashi.vanhackapp.models.Customer
 import okhttp3.ResponseBody
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -42,4 +43,8 @@ interface LoginService {
     @FormUrlEncoded
     @POST("api/v1/Customer/auth")
     fun login(@Field("email") login:String, @Field("password") password: String): Observable<ResponseBody>
+
+
+    @POST("api/v1/Customer")
+    fun getCostumer(): Observable<Customer>
 }
