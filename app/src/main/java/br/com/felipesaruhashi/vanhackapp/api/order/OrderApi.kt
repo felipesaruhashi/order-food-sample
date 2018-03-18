@@ -14,8 +14,7 @@ import javax.inject.Inject
 
 class OrderApi : IOrderApi {
 
-//    @Inject lateinit var api: IApi
-    var api = VanhackApi()
+    @Inject lateinit var api: IApi
 
     init {
         VanhackApp.component.inject(this)

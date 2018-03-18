@@ -12,10 +12,7 @@ import javax.inject.Inject
 
 class CousineApi:  ICousineApi {
 
-
-//    @Inject lateinit var api: IApi
-
-    var api = VanhackApi()
+    @Inject lateinit var api: IApi
 
     init {
         VanhackApp.component.inject(this)

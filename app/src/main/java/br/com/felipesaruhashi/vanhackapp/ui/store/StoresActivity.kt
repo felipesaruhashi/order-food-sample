@@ -9,11 +9,13 @@ import android.support.v7.widget.RecyclerView
 import android.widget.Toast
 
 import br.com.felipesaruhashi.vanhackapp.R
+import br.com.felipesaruhashi.vanhackapp.VanhackApp
 import br.com.felipesaruhashi.vanhackapp.adapters.StoreAdapter
-import br.com.felipesaruhashi.vanhackapp.api.cousine.CousineApi
+import br.com.felipesaruhashi.vanhackapp.api.cousine.ICousineApi
 import br.com.felipesaruhashi.vanhackapp.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_stores.*
 import rx.android.schedulers.AndroidSchedulers
+import javax.inject.Inject
 
 class StoresActivity : BaseActivity() {
 
@@ -23,7 +25,8 @@ class StoresActivity : BaseActivity() {
 
     var adapter:StoreAdapter? = null
 
-    var cousineApi = CousineApi()
+    @Inject lateinit var cousineApi: ICousineApi
+
     var cousineId:Int = -1
 
     var context: Context? = null
@@ -36,10 +39,10 @@ class StoresActivity : BaseActivity() {
 
         context = this
 
-
         cousineId = intent.getIntExtra(STORE_PARAM, -1)
 
 
+        VanhackApp.component.inject(this)
 
         adapter = StoreAdapter()
 

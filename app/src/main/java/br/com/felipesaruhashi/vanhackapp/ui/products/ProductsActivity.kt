@@ -9,26 +9,26 @@ import android.support.v7.widget.LinearLayoutManager
 import android.widget.Toast
 
 import br.com.felipesaruhashi.vanhackapp.R
+import br.com.felipesaruhashi.vanhackapp.VanhackApp
 import br.com.felipesaruhashi.vanhackapp.adapters.ProductsAdapter
+import br.com.felipesaruhashi.vanhackapp.api.product.IProductApi
 import br.com.felipesaruhashi.vanhackapp.api.product.ProductApi
 import br.com.felipesaruhashi.vanhackapp.ui.BaseActivity
 import br.com.felipesaruhashi.vanhackapp.ui.store.StoresActivity
 import kotlinx.android.synthetic.main.activity_products.*
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
+import javax.inject.Inject
 
 class ProductsActivity : BaseActivity() {
-
 
     companion object {
         val STORE_ID = "STORE_ID"
     }
 
-
-
     var adapter: ProductsAdapter? = null
 
-    var productsApi = ProductApi()
+    @Inject lateinit var productsApi: IProductApi
 
 
     var storeId:Int? = null
@@ -44,6 +44,8 @@ class ProductsActivity : BaseActivity() {
         this.context = this
 
         adapter = ProductsAdapter()
+
+        VanhackApp.component.inject(this)
 
 
         rvProducts.itemAnimator = DefaultItemAnimator()

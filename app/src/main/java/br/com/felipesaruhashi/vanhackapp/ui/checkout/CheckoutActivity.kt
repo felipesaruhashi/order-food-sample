@@ -13,15 +13,17 @@ import br.com.felipesaruhashi.vanhackapp.MainActivity
 import br.com.felipesaruhashi.vanhackapp.R
 import br.com.felipesaruhashi.vanhackapp.VanhackApp
 import br.com.felipesaruhashi.vanhackapp.adapters.CheckoutAdapter
+import br.com.felipesaruhashi.vanhackapp.api.order.IOrderApi
 import br.com.felipesaruhashi.vanhackapp.api.order.OrderApi
 import br.com.felipesaruhashi.vanhackapp.models.Order
 import kotlinx.android.synthetic.main.activity_checkout.*
 import rx.android.schedulers.AndroidSchedulers
+import javax.inject.Inject
 
 class CheckoutActivity : AppCompatActivity() {
 
     var adapter: CheckoutAdapter? = null
-    var orderApi = OrderApi()
+    @Inject lateinit var orderApi:IOrderApi
     var context: Context? = null
     var loadingDialog: ProgressDialog? = null
 
@@ -30,11 +32,15 @@ class CheckoutActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_checkout)
 
+        VanhackApp.component.inject(this)
+
         context = this
 
         adapter = CheckoutAdapter()
 
         adapter?.order = VanhackApp.order
+
+
 
         rvOrderItems.layoutManager = LinearLayoutManager(this)
         rvOrderItems.itemAnimator = DefaultItemAnimator()

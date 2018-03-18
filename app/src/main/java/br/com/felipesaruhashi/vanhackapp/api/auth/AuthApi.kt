@@ -15,14 +15,10 @@ import javax.inject.Inject
 
 class AuthApi: IAuthApi {
 
-//    @Inject lateinit var api: IApi
-
-    var api = VanhackApi()
+    @Inject lateinit var api: IApi
 
     init {
-
         VanhackApp.component.inject(this)
-
     }
 
 

@@ -12,9 +12,7 @@ import javax.inject.Inject
 
 class ProductApi : IProductApi {
 
-//    @Inject lateinit var api: IApi
-
-    var api = VanhackApi()
+    @Inject lateinit var api: IApi
 
     init {
         VanhackApp.component.inject(this)

@@ -10,17 +10,17 @@ import android.widget.Toast
 import br.com.felipesaruhashi.vanhackapp.MainActivity
 import br.com.felipesaruhashi.vanhackapp.R
 import br.com.felipesaruhashi.vanhackapp.VanhackApp
-import br.com.felipesaruhashi.vanhackapp.api.auth.AuthApi
+import br.com.felipesaruhashi.vanhackapp.api.auth.IAuthApi
+import br.com.felipesaruhashi.vanhackapp.api.localstorage.ILocalStorage
 import br.com.felipesaruhashi.vanhackapp.api.localstorage.LocalStorage
 import kotlinx.android.synthetic.main.activity_login.*
+import javax.inject.Inject
 
 class LoginActivity : AppCompatActivity() {
 
-//    @Inject lateinit var loginApi: IAuthApi
+    @Inject lateinit var loginApi: IAuthApi
 
-
-    var loginApi = AuthApi()
-    var localStorage = LocalStorage()
+    @Inject lateinit var localStorage: ILocalStorage
 
     var mContext: Context? = null
     var loadingDialog:ProgressDialog? = null

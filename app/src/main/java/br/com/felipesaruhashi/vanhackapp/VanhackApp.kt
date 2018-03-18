@@ -12,7 +12,6 @@ class VanhackApp : Application() {
     companion object {
         lateinit var component:ApplicationComponent
         var token:String? = ""
-        var mContext : Context? = null
         var order: Order? = null
     }
 
@@ -20,11 +19,8 @@ class VanhackApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
-
         component = DaggerApplicationComponent
                 .builder()
                 .build()
-
-
     }
 }
