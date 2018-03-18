@@ -1,5 +1,6 @@
 package br.com.felipesaruhashi.vanhackapp.ui.login
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -9,9 +10,7 @@ import br.com.felipesaruhashi.vanhackapp.MainActivity
 import br.com.felipesaruhashi.vanhackapp.R
 import br.com.felipesaruhashi.vanhackapp.VanhackApp
 import br.com.felipesaruhashi.vanhackapp.api.auth.AuthApi
-import br.com.felipesaruhashi.vanhackapp.api.auth.IAuthApi
 import kotlinx.android.synthetic.main.activity_login.*
-import javax.inject.Inject
 
 class LoginActivity : AppCompatActivity() {
 
@@ -22,28 +21,39 @@ class LoginActivity : AppCompatActivity() {
 
     var mContext: Context? = null
 
+    var loadingDialog:ProgressDialog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
 
         mContext = this
 
         VanhackApp.component.inject(this)
 
-
         btnLogin.setOnClickListener{
-            loginApi.login(etLogin.text.toString(), etPassword.text.toString())
-            .subscribe({ token ->
 
-                VanhackApp.token = token
+            if ( etLogin.text.isEmpty() || etPassword.text.isEmpty() ) {
+                Toast.makeText(mContext, getString(R.string.missing_field), Toast.LENGTH_SHORT).show()
+            } else {
 
-                val i = Intent(mContext, MainActivity::class.java)
-                mContext?.startActivity(i)
+                loadingDialog = ProgressDialog.show(this, getString(R.string.loading),
+                        getString(R.string.loading_message), true)
+                loginApi.login(etLogin.text.toString(), etPassword.text.toString())
+                .subscribe({ token ->
 
-            }, { error ->
-                Toast.makeText(mContext, error.message, Toast.LENGTH_SHORT).show()
-            })
+                    loadingDialog?.dismiss()
+
+                    VanhackApp.token = token
+
+                    val i = Intent(mContext, MainActivity::class.java)
+                    mContext?.startActivity(i)
+
+                }, { error ->
+                    loadingDialog?.dismiss()
+                    Toast.makeText(mContext, error.message, Toast.LENGTH_SHORT).show()
+                })
+            }
         }
     }
 }

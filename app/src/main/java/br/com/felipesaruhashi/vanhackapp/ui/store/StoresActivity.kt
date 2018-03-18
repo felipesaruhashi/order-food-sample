@@ -1,5 +1,6 @@
 package br.com.felipesaruhashi.vanhackapp.ui.store
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
@@ -27,6 +28,8 @@ class StoresActivity : BaseActivity() {
 
     var context: Context? = null
 
+    var loadingDialog: ProgressDialog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stores)
@@ -36,9 +39,7 @@ class StoresActivity : BaseActivity() {
 
         cousineId = intent.getIntExtra(STORE_PARAM, -1)
 
-        if ( cousineId == -1 ) {
-            finish()
-        }
+
 
         adapter = StoreAdapter()
 
@@ -46,17 +47,25 @@ class StoresActivity : BaseActivity() {
         rvStores.layoutManager = LinearLayoutManager(this) as RecyclerView.LayoutManager?
         rvStores.adapter = adapter
 
+        if ( cousineId == -1 ) {
+            finish()
+        } else {
+            loadingDialog = ProgressDialog.show(this, getString(R.string.loading),
+                    getString(R.string.loading_message), true)
 
-        cousineApi.getCousinesStores(cousineId)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe (
-        { stores ->
-            adapter?.stores = stores
-            adapter?.notifyDataSetChanged()
-        },
-        { error ->
-            Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
-        })
+            cousineApi.getCousinesStores(cousineId)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+            { stores ->
+                loadingDialog?.dismiss()
+                adapter?.stores = stores
+                adapter?.notifyDataSetChanged()
+            },
+            { error ->
+                loadingDialog?.dismiss()
+                Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
+            })
+        }
 
 
 

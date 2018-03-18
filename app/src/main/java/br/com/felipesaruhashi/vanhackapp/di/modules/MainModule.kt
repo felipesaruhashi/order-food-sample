@@ -8,6 +8,8 @@ import br.com.felipesaruhashi.vanhackapp.api.product.IProductApi
 import br.com.felipesaruhashi.vanhackapp.api.product.ProductApi
 import br.com.felipesaruhashi.vanhackapp.api.retrofit.IApi
 import br.com.felipesaruhashi.vanhackapp.api.retrofit.VanhackApi
+import br.com.felipesaruhashi.vanhackapp.api.store.IStoreApi
+import br.com.felipesaruhashi.vanhackapp.api.store.StoreApi
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -38,6 +40,13 @@ class MainModule {
     @Provides
     fun providesProductApi() : IProductApi {
         return ProductApi()
+    }
+
+
+    @Singleton
+    @Provides
+    fun providesStoreApi() : IStoreApi {
+        return StoreApi()
     }
 
 }

@@ -1,5 +1,6 @@
 package br.com.felipesaruhashi.vanhackapp.ui.products
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -34,6 +35,8 @@ class ProductsActivity : BaseActivity() {
 
     var context: Context? = null
 
+    var loadingDialog: ProgressDialog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_products)
@@ -51,20 +54,26 @@ class ProductsActivity : BaseActivity() {
 
         if ( storeId == -1 ) {
             finish()
+        } else {
+            loadingDialog = ProgressDialog.show(this, getString(R.string.loading),
+                    getString(R.string.loading_message), true)
+
+            productsApi.getProduct()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(AndroidSchedulers.mainThread())
+            .subscribe (
+            { products ->
+                loadingDialog?.dismiss()
+                adapter?.products = products.filter { it.storeId ==  storeId }
+                adapter?.notifyDataSetChanged()
+
+            },
+            { error ->
+                loadingDialog?.dismiss()
+                Toast.makeText(context, error.message, Toast.LENGTH_SHORT)
+            })
+
         }
-
-        productsApi.getProduct()
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribeOn(AndroidSchedulers.mainThread())
-        .subscribe (
-        { products ->
-            adapter?.products = products.filter { it.storeId ==  storeId }
-            adapter?.notifyDataSetChanged()
-
-        },
-        { error ->
-            Toast.makeText(context, error.message, Toast.LENGTH_SHORT)
-        })
 
     }
 }

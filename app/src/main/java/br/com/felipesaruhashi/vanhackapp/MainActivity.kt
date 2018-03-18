@@ -1,5 +1,6 @@
 package br.com.felipesaruhashi.vanhackapp
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -15,7 +16,6 @@ import android.widget.Toast
 import br.com.felipesaruhashi.vanhackapp.adapters.CousineAdapter
 import br.com.felipesaruhashi.vanhackapp.api.cousine.CousineApi
 import br.com.felipesaruhashi.vanhackapp.ui.BaseActivity
-import br.com.felipesaruhashi.vanhackapp.ui.checkout.CheckoutActivity
 import kotlinx.android.synthetic.main.content_main.*
 import rx.android.schedulers.AndroidSchedulers
 
@@ -30,6 +30,8 @@ class MainActivity : BaseActivity() {
 
     var mContext: Context? = null
 
+    var loadingDialog: ProgressDialog? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,18 +39,11 @@ class MainActivity : BaseActivity() {
 //        val toolbar = findViewById(R.id.toolbar) as Toolbar
 //        setSupportActionBar(toolbar)
 
-        val fab = findViewById(R.id.fab) as FloatingActionButton
-
 
         VanhackApp.component.inject(this)
 
         mContext = this
 
-
-        fab.setOnClickListener(View.OnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        })
 
 
         adapter = CousineAdapter()
@@ -58,14 +53,21 @@ class MainActivity : BaseActivity() {
         rvCousine.adapter = adapter
 
 
+
+        loadingDialog = ProgressDialog.show(this, getString(R.string.loading),
+                getString(R.string.loading_message), true)
+
+
         cousineApi.getCousines()
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
         { cousines ->
+            loadingDialog?.dismiss()
             adapter?.cousines = cousines
             adapter?.notifyDataSetChanged()
         },
         { error ->
+            loadingDialog?.dismiss()
             Toast.makeText(mContext, error.message, Toast.LENGTH_SHORT).show()
         })
 
